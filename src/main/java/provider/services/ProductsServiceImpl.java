@@ -5,19 +5,17 @@ import org.springframework.stereotype.Service;
 import provider.contracts.CreateProduct;
 import provider.contracts.ProviderProductResponse;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ProductsServiceImpl implements ProductsService {
 
-    private List<ProviderProductResponse> products = List.of(
-            new ProviderProductResponse(UUID.randomUUID(), "product1", "description1", 1, "store 1", 55),
-            new ProviderProductResponse(UUID.randomUUID(), "product2", "description2", 2, "store 2", 66),
-            new ProviderProductResponse(UUID.randomUUID(), "product3", "description3", 3, "store 3", 77)
-    );
+    private final List<ProviderProductResponse> products = new ArrayList<>() {{
+                add(new ProviderProductResponse(UUID.randomUUID(), "product1", "description1", 1, "store 1", 55));
+                add(new ProviderProductResponse(UUID.randomUUID(), "product2", "description2", 2, "store 2", 66));
+                add(new ProviderProductResponse(UUID.randomUUID(), "product3", "description3", 3, "store 3", 77));
+    }};
 
     @Override
     public List<ProviderProductResponse> getProducts() {

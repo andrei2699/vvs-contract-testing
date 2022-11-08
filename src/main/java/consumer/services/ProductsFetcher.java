@@ -1,13 +1,13 @@
 package consumer.services;
 
 import consumer.contracts.ProductResponse;
-import consumer.exceptions.InvalidProductId;
+import consumer.exceptions.InvalidProductIdException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import provider.contracts.CreateProduct;
+import consumer.contracts.CreateProduct;
 
 import java.util.UUID;
 
@@ -20,12 +20,12 @@ public class ProductsFetcher {
         return restTemplate.getForEntity("/api/products", ProductResponse[].class).getBody();
     }
 
-    public ProductResponse getProduct(UUID id) throws InvalidProductId {
+    public ProductResponse getProduct(UUID id) throws InvalidProductIdException {
         try {
             return restTemplate.getForEntity("/api/products/" + id, ProductResponse.class).getBody();
         } catch (HttpStatusCodeException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new InvalidProductId(id);
+                throw new InvalidProductIdException(id);
             }
 
             throw e;

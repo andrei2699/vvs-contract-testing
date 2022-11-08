@@ -1,6 +1,6 @@
 package consumer.services;
 
-import consumer.exceptions.InvalidProductId;
+import consumer.exceptions.InvalidProductIdException;
 import consumer.contracts.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class ProductsService {
                 .collect(Collectors.toList());
     }
 
-    public String getProductName(UUID id) throws InvalidProductId {
+    public String getProductName(UUID id) throws InvalidProductIdException {
         ProductResponse product = productsFetcher.getProduct(id);
 
         if (product == null) {

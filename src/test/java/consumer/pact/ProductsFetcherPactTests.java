@@ -10,7 +10,7 @@ import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import consumer.contracts.ProductResponse;
-import consumer.exceptions.InvalidProductId;
+import consumer.exceptions.InvalidProductIdException;
 import consumer.services.ProductsFetcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,8 +96,8 @@ public class ProductsFetcherPactTests {
                         .stringType("name", "Product 1")
                         .stringType("description", "Product 1 description")
                         .numberType("price", 1.0)
-                        .getBody()
-                        .toString())
+                        .getBody().toString()
+                )
                 .willRespondWith()
                 .status(200)
                 .body(new PactDslJsonBody()
@@ -122,7 +122,7 @@ public class ProductsFetcherPactTests {
 
     @Test
     @PactTestFor(pactMethod = "oneProductExists")
-    void testOneProductExists() throws InvalidProductId {
+    void testOneProductExists() throws InvalidProductIdException {
         ProductResponse productResponse = productsFetcher.getProduct(UUID.fromString("01234567-0123-0123-0123-0123456789ab"));
 
         assertEquals(UUID.fromString("01234567-0123-0123-0123-0123456789ab"), productResponse.getId());
@@ -134,7 +134,7 @@ public class ProductsFetcherPactTests {
     @Test
     @PactTestFor(pactMethod = "oneProductDoesNotExist")
     void testOneProductDoesNotExist() {
-        assertThrows(InvalidProductId.class, () -> productsFetcher.getProduct(UUID.fromString("01234567-0123-0123-0123-0123456789ab")));
+        assertThrows(InvalidProductIdException.class, () -> productsFetcher.getProduct(UUID.fromString("01234567-0123-0123-0123-0123456789ab")));
     }
 
     @Test
