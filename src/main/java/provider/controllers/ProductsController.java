@@ -30,6 +30,11 @@ public class ProductsController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/find/{index}")
+    public ProviderProductResponse getProductByIndex(@PathVariable int index) {
+        return productsService.getProductByIndex(index);
+    }
+
     @PostMapping()
     public ProviderProductResponse createProduct(@RequestBody CreateProduct createProduct) {
         return productsService.createProduct(createProduct);

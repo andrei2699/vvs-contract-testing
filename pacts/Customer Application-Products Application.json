@@ -24,7 +24,7 @@
           }
         ],
         "headers": {
-          "Content-Type": "application/json; charset=UTF-8"
+          "Content-Type": "application/json;charset=UTF-8"
         },
         "matchingRules": {
           "body": {
@@ -78,6 +78,93 @@
       }
     },
     {
+      "description": "a request for the first product",
+      "providerStates": [
+        {
+          "name": "get product by index existing"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/products/find/0"
+      },
+      "response": {
+        "body": {
+          "description": "Product 1 description",
+          "id": "01234567-0123-0123-0123-0123456789ab",
+          "name": "Product 1",
+          "price": 1.0
+        },
+        "headers": {
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$.description": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            },
+            "$.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.price": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "number"
+                }
+              ]
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request for a non existing product",
+      "providerStates": [
+        {
+          "name": "get product by index non existing"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/products/find/-1"
+      },
+      "response": {
+        "status": 500
+      }
+    },
+    {
       "description": "a request to create a product",
       "providerStates": [
         {
@@ -101,7 +188,7 @@
           "price": 1.0
         },
         "headers": {
-          "Content-Type": "application/json; charset=UTF-8"
+          "Content-Type": "application/json;charset=UTF-8"
         },
         "matchingRules": {
           "body": {
@@ -188,7 +275,7 @@
           "price": 1.0
         },
         "headers": {
-          "Content-Type": "application/json; charset=UTF-8"
+          "Content-Type": "application/json;charset=UTF-8"
         },
         "matchingRules": {
           "body": {

@@ -13,4 +13,6 @@ public interface ProductsService {
     Optional<ProviderProductResponse> getProduct(UUID id);
 
     ProviderProductResponse createProduct(CreateProduct createProduct);
+
+    ProviderProductResponse getProductByIndex(int index);
 }

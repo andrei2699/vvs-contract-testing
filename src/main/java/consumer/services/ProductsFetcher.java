@@ -1,5 +1,6 @@
 package consumer.services;
 
+import consumer.contracts.CreateProduct;
 import consumer.contracts.ProductResponse;
 import consumer.exceptions.InvalidProductIdException;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import consumer.contracts.CreateProduct;
 
 import java.util.UUID;
 
@@ -36,5 +36,17 @@ public class ProductsFetcher {
         CreateProduct createProduct = new CreateProduct(name, description, price);
 
         return restTemplate.postForEntity("/api/products", createProduct, ProductResponse.class).getBody();
+    }
+
+    public ProductResponse getProductByIndex(int index) {
+        try {
+            return restTemplate.getForEntity("/api/products/find/" + index, ProductResponse.class).getBody();
+        } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+                throw new RuntimeException("The product at index " + index + " does not exist");
+            }
+
+            throw e;
+        }
     }
 }

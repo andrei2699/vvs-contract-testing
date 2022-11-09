@@ -147,4 +147,52 @@ public class ProductsFetcherPactTests {
         assertEquals("Product 1 description", productResponse.getDescription());
         assertEquals(1.0, productResponse.getPrice());
     }
+
+    @Pact(consumer = "Customer Application")
+    public RequestResponsePact getProductByIndexExists(PactDslWithProvider builder) {
+        return builder
+                .given("get product by index existing")
+                .uponReceiving("a request for the first product")
+                .path("/api/products/find/0")
+                .method("GET")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .uuid("id", UUID.fromString("01234567-0123-0123-0123-0123456789ab"))
+                        .stringType("name", "Product 1")
+                        .stringType("description", "Product 1 description")
+                        .numberType("price", 1.0))
+                .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "getProductByIndexExists")
+    void testProductByIndexExists() {
+        ProductResponse productResponse = productsFetcher.getProductByIndex(0);
+
+        assertEquals(UUID.fromString("01234567-0123-0123-0123-0123456789ab"), productResponse.getId());
+        assertEquals("Product 1", productResponse.getName());
+        assertEquals("Product 1 description", productResponse.getDescription());
+        assertEquals(1.0, productResponse.getPrice());
+    }
+
+    @Pact(consumer = "Customer Application")
+    public RequestResponsePact getProductByIndexNotExists(PactDslWithProvider builder) {
+        return builder
+                .given("get product by index non existing")
+                .uponReceiving("a request for a non existing product")
+                .path("/api/products/find/-1")
+                .method("GET")
+                .willRespondWith()
+                .status(500)
+                .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "getProductByIndexNotExists")
+    void testProductByIndexNotExists() {
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> productsFetcher.getProductByIndex(-1));
+
+        assertEquals("The product at index -1 does not exist", runtimeException.getMessage());
+    }
 }

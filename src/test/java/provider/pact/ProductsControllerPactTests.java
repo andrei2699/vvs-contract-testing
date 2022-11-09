@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @PactFolder("pacts")
@@ -68,5 +69,17 @@ public class ProductsControllerPactTests {
         ProviderProductResponse product = new ProviderProductResponse(UUID.randomUUID(), "Product 1", "Product 1 description", 11, "store 1", 1);
 
         when(productsService.createProduct(any())).thenReturn(product);
+    }
+
+    @State("get product by index existing")
+    void getProductByIndexExists() {
+        ProviderProductResponse product = new ProviderProductResponse(UUID.randomUUID(), "Product 1", "Product 1 description", 11, "store 1", 1);
+
+        when(productsService.getProductByIndex(anyInt())).thenReturn(product);
+    }
+
+    @State("get product by index non existing")
+    void getProductByIndexNotExists() {
+        when(productsService.getProductByIndex(anyInt())).thenThrow(new IndexOutOfBoundsException());
     }
 }

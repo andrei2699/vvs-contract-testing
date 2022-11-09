@@ -37,4 +37,9 @@ public class ProductsServiceImpl implements ProductsService {
         products.add(productResponse);
         return productResponse;
     }
+
+    @Override
+    public ProviderProductResponse getProductByIndex(int index) {
+        return products.get(index);
+    }
 }
